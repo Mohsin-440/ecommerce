@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import dbConn from "./db/conn.js";
-dbConn(process.env.DB_CONNECTION);
 
 //Routers imports
 import userRouter from "./routes/user.js";
@@ -25,6 +24,7 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 
 //DATABASE connection
+dbConn(process.env.DB_CONNECTION);
 
 const port = process.env.PORT || 5000;
 

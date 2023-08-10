@@ -11,7 +11,6 @@ const router = express.Router();
 config();
 
 //SignUP
-const { AES, enc } = crypto;
 router.post("/register",register);
 
 // Login
@@ -23,11 +22,11 @@ router.post("/login", async (req, res) => {
     return res.status(404).send("Wrong credentials! ");
   }
   //Decrypting the user password from the database
-  const hashedPassword = AES.decrypt(
+  const hashedPassword = crypto.AES.decrypt(
     user.password,
     process.env.PASS_SECRET_KEY
   );
-  const originalPassword = await hashedPassword.toString(enc.Utf8);
+  const originalPassword = await hashedPassword.toString(crypto.enc.Utf8);
   //Compare the Decrypted Password with the password that user enter
   try {
     if (originalPassword === req.body.password) {

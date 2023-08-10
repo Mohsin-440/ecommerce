@@ -8,7 +8,7 @@ export const register = async (req, res) => {
       email: req.body.email,
       password: cryptoJs.AES.encrypt(
         req.body.password,
-        process.env.SECRET_KEY
+        process.env.PASS_SECRET_KEY
       ).toString(),
     });
     const savedUser = await newUser.save();
@@ -19,3 +19,4 @@ export const register = async (req, res) => {
     res.status(500).json(error);
   }
 };
+ 
