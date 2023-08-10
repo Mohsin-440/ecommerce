@@ -1,8 +1,8 @@
-const router = require("express").Router();
+import express from "express";
+import { check } from "../controllers/check/chec.js";
 
-router.get("/", (req, res) => {
-  res.status(200).send("HEllo this is user Routing");
+const userRouter = express.Router();
 
-});
+userRouter.get("/", check);
 
-module.exports = router;
+export default userRouter

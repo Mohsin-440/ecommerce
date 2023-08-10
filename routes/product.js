@@ -1,8 +1,9 @@
-const router = require("express").Router();
+import express from "express";
 
-router.get("/", (req, res) => {
+const productRouter = express.Router();
+productRouter.get("/", (req, res) => {
   res.status(200).send("HEllo this is product Routing");
-
 });
 
-module.exports = router;
+
+export default productRouter;
