@@ -10,7 +10,7 @@ const userRouter = express.Router();
 
 userRouter.put("/:id", updateUser);
 userRouter.delete("/:id", deleteUser);
-userRouter.get("/find/:id", getOneUser);
+userRouter.get("/:id", getOneUser);
 userRouter.get("/", getAllUsers);
 
 export default userRouter;

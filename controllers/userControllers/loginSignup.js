@@ -1,9 +1,7 @@
-import cryptoJS from "crypto-js";
-import crypto from "crypto";
 import { users } from "../../models/User.js";
 import { Types } from "mongoose";
 import { setCookies } from "../../helpers/cookieSetter.js";
-import { hashPassword } from "../../helpers/hashPasswor.js";
+import { hashPassword } from "../../helpers/hashPassword.js";
 
 const registerController = async (req, res) => {
   try {
