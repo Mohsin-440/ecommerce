@@ -1,8 +1,10 @@
 import express from "express";
+import { authorizeAdmin } from "../middleware/authorizeUser/authorizeAdmin.js";
 
 const productRouter = express.Router();
 // productRouter.get("/",);
-productRouter.post("/add", );
+authorizeAdmin
+productRouter.post("/add",);
 
 
 export default productRouter;

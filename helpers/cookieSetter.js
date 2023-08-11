@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
-export const setCookies = (res) => {
-    const token = jwt.sign(
+export const setCookies = async (getUser, res) => {
+    const token = await jwt.sign(
         {
             id: getUser._id,
             role: getUser.role,
@@ -8,6 +8,7 @@ export const setCookies = (res) => {
         process.env.JWT_SECRET_KEY,
         { expiresIn: "3d" }
     );
+    
 
     const _1day = 1 * 24 * 60 * 60 * 1000;
     const options = {
