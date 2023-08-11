@@ -4,6 +4,7 @@ import express from "express";
 import dbConn from "./db/conn.js";
 import { applyRouterMiddlewares } from "./app.use.router.middleware.js";
 import cookieParser from "cookie-parser"
+import crypto from "crypto";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cookieParser())
 //routers
 applyRouterMiddlewares(app)
+
 
 //DATABASE connection
 dbConn(process.env.DB_CONNECTION);

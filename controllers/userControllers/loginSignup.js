@@ -1,7 +1,9 @@
-import crypto from "crypto-js";
+import cryptoJS from "crypto-js";
+import crypto from "crypto";
 import { users } from "../../models/User.js";
 import { Types } from "mongoose";
 import { setCookies } from "../../helpers/cookieSetter.js";
+import { hashPassword } from "../../helpers/hashPasswor.js";
 
 const registerController = async (req, res) => {
   try {
@@ -13,21 +15,19 @@ const registerController = async (req, res) => {
     })
     if (checkEmail)
       return res.status(403).json({ error: { email: "email already in use" } });
+    const hasedPassword = hashPassword(req.body.password)
 
-    const password = crypto.AES.encrypt(
-      req.body.password,
-      process.env.PASS_SECRET_KEY
-    ).toString();
 
     const newUser = new users({
       ...req.body,
       _id,
       username,
-      password,
+      password: hasedPassword,
 
     });
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    delete savedUser._doc.password
+    res.status(201).json(savedUser._doc);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -41,15 +41,9 @@ const loginController = async (req, res) => {
     if (!getUser)
       return res.status(404).send("Wrong credentials! ");
 
+    const hashedPassword = hashPassword(req.body.password)
 
-    const hashedPassword = crypto.AES.decrypt(
-      getUser.password,
-      process.env.PASS_SECRET_KEY
-    );
-
-    const originalPassword = hashedPassword.toString(crypto.enc.Utf8);
-
-    if (originalPassword !== req.body.password)
+    if (getUser.password !== hashedPassword)
       return res.status(401).send("Wrong credentials! ");
 
     const { password, ...other } = getUser._doc;
@@ -59,7 +53,7 @@ const loginController = async (req, res) => {
     return res.status(200).json({ ...other });
   } catch (error) {
     console.log(error)
-    return res.status(500).send("Server error");
+    return res.status(500).send(error);
   }
 };
 
