@@ -5,6 +5,7 @@ import {
   registerController,
   loginController,
 } from "../controllers/userControllers/loginSignup.js";
+import { authenticateUser } from "../middleware/authenticateUser.js";
 
 const router = express.Router();
 
@@ -12,6 +13,6 @@ const router = express.Router();
 router.post("/register", signUpValidator, registerController);
 
 // Login
-router.post("/login", loginValidator, loginController);
+router.post("/login", loginValidator, authenticateUser, loginController);
 
 export default router;
