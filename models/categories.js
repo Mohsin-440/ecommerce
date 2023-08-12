@@ -11,7 +11,7 @@ export const categories = mongoose.model("categories", categorySchema);
 
 const subCategorySchema = new Schema(
   {
-    subCategoryName: { type: String, required: true },
+    subCategoryName: { type: String, required: true, unique: true },
 
     categoryId: {
       type: Schema.Types.ObjectId,

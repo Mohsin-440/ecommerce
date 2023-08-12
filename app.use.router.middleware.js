@@ -1,5 +1,4 @@
 import userRouter from "./routes/user.js";
-import authRouter from "./routes/auth.js"
 import productRouter from "./routes/product.js"
 import orderRouter from "./routes/order.js"
 import cartRouter from "./routes/cart.js";
@@ -7,7 +6,6 @@ import categoryRouter from "./routes/categories.js";
 
 export function applyRouterMiddlewares(app) {
     
-    app.use("/api/auth", authRouter);
     app.use("/api/categories", categoryRouter);
     app.use("/api/user", userRouter);
     app.use("/api/product", productRouter);

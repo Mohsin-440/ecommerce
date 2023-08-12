@@ -9,12 +9,13 @@ const ProductSchema = new Schema(
     size: { type: String },
     color: { type: String },
     price: { type: Number, required: true },
-    
+
     categoryId: {
       type: Schema.Types.ObjectId,
       ref: "categories",
       required: true,
     },
+    quantity: { type: Number, required: true },
   },
   { timestamps: true }
 );

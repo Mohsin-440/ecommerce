@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createProduct,
+  deleteProduct,
   updateProduct,
 } from "../controllers/productControllers/modifyProduct.js";
 import {
@@ -12,11 +13,14 @@ import {
   addProductValidator,
   updateProductValidator,
 } from "../middleware/apiValidator/product.validators/modifyProduct.validators.js";
+
+
 const productRouter = express.Router();
 // productRouter.get("/",);
 productRouter.post("/add", addProductValidator, createProduct);
-productRouter.get("/:_id", getOneProduct);
 productRouter.put("/:_id", updateProductValidator, updateProduct);
+productRouter.delete("/:_id", deleteProduct);
+productRouter.get("/:_id", getOneProduct);
 productRouter.get("/", searchProducts);
 
 export default productRouter;

@@ -5,11 +5,14 @@ const CartSchema = new Schema(
     products: [
       {
         prodcutId: {
-          type: String,
+          type: Schema.Types.ObjectId,
+          ref: "products",
+          required:true
         },
         quantity: {
           type: Number,
           default: 1,
+          required:true
         },
       },
     ],
@@ -17,4 +20,4 @@ const CartSchema = new Schema(
   { timestamps: true }
 );
 
-export const cart = mongoose.model("Cart", CartSchema);
+export const carts = mongoose.model("Cart", CartSchema);

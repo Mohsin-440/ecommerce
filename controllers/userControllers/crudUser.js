@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
-dotenv.config();
 import { users } from "../../models/User.js";
 import { hashPassword } from "../../helpers/hashPassword.js";
 
 const updateUser = async (req, res) => {
   if (req.body.password) req.body.password = hashPassword(req.body.password);
+
+  if (req?.body?.role) req.body.role = "customer";
 
   try {
     const updatedUser = await users.findByIdAndUpdate(
@@ -47,6 +48,7 @@ const getAllUsers = async (req, res) => {
       : await users.find();
     res.status(200).json(getAllUser);
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 };

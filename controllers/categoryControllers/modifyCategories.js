@@ -2,39 +2,91 @@ import { categories, subCategories } from "../../models/categories.js";
 
 export const createCategory = async (req, res) => {
   try {
+    const checkCategoryName = await categories.find({
+      categoryName: req.body.categoryName,
+    });
+
+    if (checkCategoryName?.length && checkCategoryName?.length > 0)
+      return res
+        .status(403)
+        .json({ error: { categoryName: "Category Name already exists..." } });
+
     const createdCategory = await categories.create(req.body);
 
     return res.status(200).json(createdCategory);
   } catch (error) {
-    return res.status(500).json("Category already exist...");
+    console.log(`error occurred while creating Category: ${error}`);
+    return res.status(500).json(error);
   }
 };
 
 export const updateCategory = async (req, res) => {
   try {
-    const createdCategory = await categories.updateOne(
-      { _id: req.body._id },
-      {
-        $set: { ...req.body },
-      }
-    );
+    const checkCategoryName = await categories.find({
+      categoryName: req.body.categoryName,
+    });
+    if (checkCategoryName?.length && checkCategoryName?.length > 0)
+      return res
+        .status(403)
+        .json({ error: { categoryName: "Category Name already exists" } });
+
+    const createdCategory = await categories.findByIdAndUpdate(req.params._id, {
+      $set: { ...req.body },
+    });
 
     return res.staus(200).json(createdCategory);
   } catch (error) {
+    console.log(`error occurred while updating category: ${error}`);
     return res.status(500).json(error);
   }
 };
 
 export const createSubCategory = async (req, res) => {
   try {
-    const findCatgory = await categories.findById(req.body._id);
+    const findCatgory = await categories.findById(req.body.categoryId);
+
     if (!findCatgory)
       return res.status(404).json({ message: "category not found" });
 
-    const createdCategory = await subCategories.create();
+    const checkSubCategoryName = await subCategories.find({
+      subCategoryName: req.body.subCategoryName,
+    });
 
-    return res.staus(200).json(createdCategory);
+    if (checkSubCategoryName?.length && checkSubCategoryName?.length > 0)
+      return res.status(403).json("Category Name already exists...");
+
+    const createdSubCategory = await subCategories.create(req.body);
+
+    return res.status(200).json(createdSubCategory);
   } catch (error) {
+    console.log(`error occurred while creating subCategory: ${error}`);
+    return res.status(500).json(error);
+  }
+};
+
+export const updateSubCategory = async (req, res) => {
+  try {
+    const findCatgory = await subCategories.findById(req.params._id);
+
+    if (!findCatgory)
+      return res.status(404).json({ message: "sub Category not found" });
+
+    const checkSubCategoryName = await subCategories.find({
+      subCategoryName: req.body.subCategoryName,
+    });
+    if (checkSubCategoryName?.length && checkSubCategoryName?.length > 0)
+      return res.status(403).json("Category Name already exists...");
+
+    const createdSubCategory = await subCategories.findByIdAndUpdate(
+      req.params._id,
+      {
+        $set: req.body,
+      }
+    );
+
+    return res.status(200).json(createdSubCategory);
+  } catch (error) {
+    console.log(`error occurred while updating subCategory: ${error}`);
     return res.status(500).json(error);
   }
 };

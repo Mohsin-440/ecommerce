@@ -12,7 +12,7 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json(createdProduct);
   } catch (error) {
-    console.log(error);
+    console.log(`error occurred while careating Product: ${error}`);
     res.status(500).json(error);
   }
 };
@@ -37,6 +37,17 @@ export const updateProduct = async (req, res) => {
 
     res.status(201).json(updateProduct);
   } catch (error) {
+    console.log(`error occurred while updating Product: ${error}`);
+    res.status(500).json(error);
+  }
+};
+
+export const deleteProduct = async (req, res) => {
+  try {
+    const delProduct = await products.findByIdAndDelete(req.params._id);
+    res.status(202).json("Product is successfully deleted...")
+  } catch (error) {
+    console.log(`error occurred while deleting Product: ${error}`);
     res.status(500).json(error);
   }
 };
