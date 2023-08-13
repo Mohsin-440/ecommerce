@@ -14,10 +14,12 @@ import {
   updateProductValidator,
 } from "../middleware/apiValidator/product.validators/modifyProduct.validators.js";
 
-
 const productRouter = express.Router();
-// productRouter.get("/",);
-productRouter.post("/add", addProductValidator, createProduct);
+
+
+// addProductValidator,
+
+productRouter.post("/add", createProduct);
 productRouter.put("/:_id", updateProductValidator, updateProduct);
 productRouter.delete("/:_id", deleteProduct);
 productRouter.get("/:_id", getOneProduct);

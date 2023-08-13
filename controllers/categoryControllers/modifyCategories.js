@@ -30,11 +30,16 @@ export const updateCategory = async (req, res) => {
         .status(403)
         .json({ error: { categoryName: "Category Name already exists" } });
 
-    const createdCategory = await categories.findByIdAndUpdate(req.params._id, {
-      $set: { ...req.body },
-    });
-
-    return res.staus(200).json(createdCategory);
+    const updateCategory = await categories.updateOne(
+      {
+        _id: req.params._id,
+      },
+      {
+        $set: { ...req.body },
+      }
+    );
+    const getCtagory = await categories.findById(req.params._id);
+    return res.status(200).json(getCtagory);
   } catch (error) {
     console.log(`error occurred while updating category: ${error}`);
     return res.status(500).json(error);
@@ -77,14 +82,17 @@ export const updateSubCategory = async (req, res) => {
     if (checkSubCategoryName?.length && checkSubCategoryName?.length > 0)
       return res.status(403).json("Category Name already exists...");
 
-    const createdSubCategory = await subCategories.findByIdAndUpdate(
-      req.params._id,
+    const updatesubCategory = await subCategories.updateOne(
+      {
+        _id: req.params._id,
+      },
       {
         $set: req.body,
       }
     );
+    const getSubCategory = await subCategories.findById(req.params._id);
 
-    return res.status(200).json(createdSubCategory);
+    return res.status(200).json(getSubCategory);
   } catch (error) {
     console.log(`error occurred while updating subCategory: ${error}`);
     return res.status(500).json(error);

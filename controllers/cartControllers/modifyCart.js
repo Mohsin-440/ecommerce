@@ -9,7 +9,7 @@ export const addCart = async (req, res) => {
       if (products[i].prodcutId) {
         const getProduct = await products.findOne({
           _id: products[i].prodcutId,
-          quantity: { $lt: products[i].quantity },
+          quantity: { $lt: products[i].quantity }
         });
 
         if (getProduct) {

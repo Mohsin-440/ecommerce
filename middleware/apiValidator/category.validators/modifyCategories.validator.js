@@ -31,10 +31,10 @@ export const addSubCategoryValidator = (req, res, next) => {
   const schema = joi
     .object()
     .keys({
-      CategoryId: joi.string().required().messages({
-        "any.required": "CategoryId is required",
-        "string.empty": "CategoryId is required",
-        "string.base": "CategoryId must be a string",
+      categoryId: joi.string().required().messages({
+        "any.required": "categoryId is required",
+        "string.empty": "categoryId is required",
+        "string.base": "categoryId must be a string",
       }),
       subCategoryName: joi.string().required().messages({
         "any.required": "Sub Category Name is required",
