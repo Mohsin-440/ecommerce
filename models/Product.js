@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const variation = new Schema({
   size: { type: String, required: true },
-  subVariation: [
+  subVariations: [
     {
       price: { type: Number },
       color: {
@@ -18,6 +18,7 @@ const variation = new Schema({
     },
   ],
 });
+
 const ProductSchema = new Schema(
   {
     title: { type: String, required: true, unique: true },

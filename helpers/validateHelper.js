@@ -1,7 +1,7 @@
 export const validatationTemplate = (req, res, next, schema, log) => {
   try {
     let { error } = schema.validate(req.body, { abortEarly: false });
-    console.log(error);
+
     if (error?.details) {
       let Errs = {};
 

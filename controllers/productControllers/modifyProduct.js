@@ -6,7 +6,7 @@ export const createProduct = async (req, res) => {
       title: req.body.title,
     });
     if (checkName)
-      return res.status(403).json({ error: { title: "Title already taken" } });
+      return res.status(403).json({ error: { title: "Title already taken." } });
 
     const createdProduct = await products.create(req.body);
 
@@ -23,19 +23,26 @@ export const updateProduct = async (req, res) => {
     });
 
     if (!findProduct)
-      return res.status(403).json({ error: { id: "Id is required" } });
+      return res.status(404).json({ error: { message: "Page not found." } });
 
     const checkName = await products.findOne({
       title: req.body.title,
+      _id: { $ne: req.params._id },
     });
     if (checkName)
-      return res.status(403).json({ error: { title: "Name already taken" } });
+      return res.status(403).json({ error: { title: "Name already taken." } });
 
-    const updateProduct = await products.findByIdAndUpdate(req.params._id, {
-      $set: req.body,
-    });
+    const updateProduct = await products.updateOne(
+      {
+        _id: req.params._id,
+      },
+      {
+        $set: req.body,
+      }
+    );
+    const getProduct = await products.findById(req.params._id);
 
-    res.status(201).json(updateProduct);
+    res.status(201).json(getProduct);
   } catch (error) {
     console.log(`error occurred while updating Product: ${error}`);
     res.status(500).json(error);
@@ -45,7 +52,7 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const delProduct = await products.findByIdAndDelete(req.params._id);
-    res.status(202).json("Product is successfully deleted...")
+    res.status(202).json("Product is successfully deleted...");
   } catch (error) {
     console.log(`error occurred while deleting Product: ${error}`);
     res.status(500).json(error);

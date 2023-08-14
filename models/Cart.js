@@ -4,8 +4,18 @@ const CartSchema = new Schema(
     userId: { type: String, required: true },
     products: [
       {
-        prodcutId: {
+        productId: {
           type: Schema.Types.ObjectId,
+          ref: "products",
+          required:true
+        },
+        variationId: {
+          type: String,
+          ref: "products",
+          required:true
+        },
+        subVariationId: {
+          type: String,
           ref: "products",
           required:true
         },

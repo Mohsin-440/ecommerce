@@ -1,69 +1,13 @@
-import { Types } from "mongoose";
-import { validatationTemplate, } from "../../../helpers/validateHelper.js";
+import { validatationTemplate } from "../../../helpers/validateHelper.js";
 import joi from "joi";
-import { greaterThanValidator, objectValidator } from "../../../helpers/joiCustomValidations.js";
+import {
+  greaterThanValidator,
+  objectValidator,
+} from "../../../helpers/joiCustomValidations.js";
+import { productVariationsValidator } from "../../../helpers/productModifyValidateHelper.js";
 
-const checkIfElseValidation = (req, res) => {
-  let error = false
-  const objectKeys = ["imgUrl", "color", "price", "categoryId"];
-
-  if (!req.body.variations) {
-
-    let checkObjectKeysError = ""
-    objectKeys.forEach(key => {
-      if (!req.body?.[key])
-        checkObjectKeysError = key
-    })
-
-    if (checkObjectKeysError) {
-      res.status(403).json({
-        error: {
-          [checkObjectKeysError]: `${checkObjectKeysError} is required.`,
-        }
-      })
-      return error = true
-    }
-
-  }
-
-
-  else if (req.body.price && req.body.variations && req.body.variations.length) {
-
-    const { variations } = req.body;
-    for (let i = 0; i < variations.length; i++) {
-      if (variations[i].price) {
-        res.status(403).json({
-          error: {
-            message: "when price is given for whole product, each variation cannot have its own price",
-          }
-        })
-        return error = true
-      }
-    }
-  }
-
-
-  else if (req.body.color && req.body.variations && req.body.variations.length) {
-    const { variations } = req.body
-    for (let i = 0; i < variations.length; i++) {
-      if (variations[i].color) {
-        res.status(403).json({
-          error: {
-            message: "when color is given for whole product, each variation cannot have its own price",
-          }
-        })
-        return error = true
-
-      }
-    }
-  }
-
-
-}
 export const addProductValidator = (req, res, next) => {
-
-  if (checkIfElseValidation(req, res))
-    return
+  if (productVariationsValidator(req, res)) return;
 
   const subVariationScehma = joi.object().keys({
     price: joi.number().integer().custom(greaterThanValidator(0)).messages({
@@ -72,20 +16,22 @@ export const addProductValidator = (req, res, next) => {
       "number.integer": "Price must be in whole number.",
       "number.base": "Price must be a number.",
     }),
-    color: joi.object().keys({
-      name: joi.string().required().messages({
-        "string.base": "Color Name must be a string",
-        "any.required": "Color Name is required",
-
+    color: joi
+      .object()
+      .keys({
+        name: joi.string().required().messages({
+          "string.base": "Color Name must be a string",
+          "any.required": "Color Name is required",
+        }),
+        colorCode: joi.string().messages({
+          "string.base": "Color Code must be a string",
+          "string.empty": "Color Code must not be empty.",
+        }),
+      })
+      .required()
+      .messages({
+        "any.required": "Color is required",
       }),
-      colorCode: joi.string().messages({
-        "string.base": "Color Code must be a string",
-        "string.empty": "Color Code must not be empty.",
-      }),
-
-    }).required().messages({
-      "any.required": "Color is required"
-    }),
     quantity: joi.number().required().messages({
       "number.base": "Quantity must be a Number",
       "any.required": "Quantity is required",
@@ -93,8 +39,7 @@ export const addProductValidator = (req, res, next) => {
     imgUrl: joi.string().messages({
       "string.base": "Image url must be a string",
     }),
-  })
-
+  });
 
   const variationScehma = joi.object().keys({
     size: joi.string().required().messages({
@@ -102,9 +47,9 @@ export const addProductValidator = (req, res, next) => {
       "string.base": "Size must be a string",
     }),
     subVariations: joi.array().items(subVariationScehma).required().messages({
-      "any.required": "Sub Variations is required."
-    })
-  })
+      "any.required": "Sub Variations is required.",
+    }),
+  });
   const schema = joi
     .object()
     .keys({
@@ -135,74 +80,70 @@ export const addProductValidator = (req, res, next) => {
         "number.base": "Price must be a number.",
       }),
       // .when("variations", { not: joi.exist(), then: joi.required() }),
-      categoryId: joi.string().required().custom(objectValidator)
-        .messages({
-          "any.invalid": "categoryId must be a BSON object Id.",
-          "string.base": "categoryId must be a BSON object Id.",
-          "any.required": "categoryId is required",
-          "string.empty": "categoryId is required",
-        }),
-      variations: joi.when('color', { not: joi.exist(), then: joi.array().items(variationScehma).required() })
-        .messages({
-          "any.required": "Variations are required."
+      categoryId: joi.string().required().custom(objectValidator).messages({
+        "any.invalid": "categoryId must be a BSON object Id.",
+        "string.base": "categoryId must be a BSON object Id.",
+        "any.required": "categoryId is required",
+        "string.empty": "categoryId is required",
+      }),
+      variations: joi
+        .when("color", {
+          not: joi.exist(),
+          then: joi.array().items(variationScehma).required(),
         })
-
+        .messages({
+          "any.required": "Variations are required.",
+        }),
     })
     .unknown(false);
 
   validatationTemplate(req, res, next, schema);
-
 };
 
 export const updateProductValidator = (req, res, next) => {
-  if (checkIfElseValidation(req, res))
-    return
-
+  if (productVariationsValidator(req, res)) return;
 
   const subVariationScehma = joi.object().keys({
     price: joi.number().custom(greaterThanValidator(0)).messages({
       "number.base": "Price must be a Number.",
       "number.min": "Price must be greater than 0.",
     }),
-    color: joi.object().keys({
-      name: joi.string().required().messages({
-        "string.base": "Color Name must be a string",
-        "any.required": "Color Name is required",
-
+    color: joi
+      .object()
+      .keys({
+        name: joi.string().messages({
+          "string.base": "Color Name must be a string",
+          "any.required": "Color Name is required",
+        }),
+        colorCode: joi.string().messages({
+          "string.base": "Color Code must be a string",
+          "string.empty": "Color Code must not be empty.",
+        }),
       }),
-      colorCode: joi.string().messages({
-        "string.base": "Color Code must be a string",
-        "string.empty": "Color Code must not be empty.",
-      }),
-
-    }).required().messages({
-      "any.required": "Color is required"
-    }),
-    quantity: joi.number().required().messages({
+    quantity: joi.number().messages({
       "number.base": "Quantity must be a Number",
       "any.required": "Quantity is required",
     }),
     imgUrl: joi.string().messages({
       "string.base": "Image url must be a string",
     }),
-  })
-
+  });
 
   const variationScehma = joi.object().keys({
     size: joi.string().messages({
       "string.base": "Size must be a string",
     }),
-    subVariations: joi.array().items(subVariationScehma)
-  })
+    subVariations: joi.array().items(subVariationScehma),
+  });
 
   const schema = joi
     .object()
     .keys({
-      title: joi.string().required().messages({
+      title: joi.string().messages({
         "string.empty": "Title must not be empty.",
         "string.base": "Title must be a string.",
       }),
-      description: joi.string().required().messages({
+      description: joi.string().messages({
         "string.empty": "Description must not be empty.",
         "string.base": "Description must be a string.",
       }),
@@ -220,18 +161,20 @@ export const updateProductValidator = (req, res, next) => {
         "number.base": "Price must be a number",
       }),
       // .when("variations", { not: joi.exist(), then: joi.required() }),
-      categoryId: joi.string().required().custom(objectValidator)
-        .messages({
-          "any.invalid": "categoryId must be a BSON object Id.",
-          "string.base": "categoryId must be a BSON object Id.",
-          "any.required": "categoryId is required",
-          "string.empty": "categoryId is required",
-        }),
-      variations: joi.when('color', { not: joi.exist(), then: joi.array().items(variationScehma).required() })
-        .messages({
-          "any.required": "Variations are required."
+      categoryId: joi.string().custom(objectValidator).messages({
+        "any.invalid": "categoryId must be a BSON object Id.",
+        "string.base": "categoryId must be a BSON object Id.",
+        "any.required": "categoryId is required",
+        "string.empty": "categoryId is required",
+      }),
+      variations: joi
+        .when("color", {
+          not: joi.exist(),
+          then: joi.array().items(variationScehma),
         })
-
+        .messages({
+          "any.required": "Variations are required.",
+        }),
     })
     .unknown(false);
 
