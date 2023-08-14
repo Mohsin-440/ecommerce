@@ -4,8 +4,15 @@ const variation = new Schema({
   size: { type: String, required: true },
   subVariation: [
     {
-      price: { type: String },
-      color: { type: String, required: true },
+      price: { type: Number },
+      color: {
+        name: {
+          type: String, required: true,
+        },
+        colorCode: {
+          type: String, required: true,
+        },
+      },
       quantity: { type: Number, required: true },
       imgUrl: [{ type: String, required: true }]
     },

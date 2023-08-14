@@ -19,7 +19,7 @@ const productRouter = express.Router();
 
 // addProductValidator,
 
-productRouter.post("/add", createProduct);
+productRouter.post("/add",addProductValidator, createProduct);
 productRouter.put("/:_id", updateProductValidator, updateProduct);
 productRouter.delete("/:_id", deleteProduct);
 productRouter.get("/:_id", getOneProduct);
