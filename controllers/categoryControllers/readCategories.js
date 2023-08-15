@@ -56,3 +56,6 @@ export const getAllCategoriesWithSubCategory = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+
+

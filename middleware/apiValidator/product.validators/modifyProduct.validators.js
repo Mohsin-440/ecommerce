@@ -32,9 +32,9 @@ export const addProductValidator = (req, res, next) => {
       .messages({
         "any.required": "Color is required",
       }),
-    quantity: joi.number().required().messages({
-      "number.base": "Quantity must be a Number",
-      "any.required": "Quantity is required",
+    stock: joi.number().required().messages({
+      "number.base": "Stock must be a Number",
+      "any.required": "Stock is required",
     }),
     imgUrl: joi.string().messages({
       "string.base": "Image url must be a string",
@@ -86,6 +86,10 @@ export const addProductValidator = (req, res, next) => {
         "any.required": "categoryId is required",
         "string.empty": "categoryId is required",
       }),
+      stock: joi.number().required().messages({
+        "number.base": "Stock must be a Number",
+        "any.required": "Stock is required",
+      }),
       variations: joi
         .when("color", {
           not: joi.exist(),
@@ -108,21 +112,19 @@ export const updateProductValidator = (req, res, next) => {
       "number.base": "Price must be a Number.",
       "number.min": "Price must be greater than 0.",
     }),
-    color: joi
-      .object()
-      .keys({
-        name: joi.string().messages({
-          "string.base": "Color Name must be a string",
-          "any.required": "Color Name is required",
-        }),
-        colorCode: joi.string().messages({
-          "string.base": "Color Code must be a string",
-          "string.empty": "Color Code must not be empty.",
-        }),
+    color: joi.object().keys({
+      name: joi.string().messages({
+        "string.base": "Color Name must be a string",
+        "any.required": "Color Name is required",
       }),
-    quantity: joi.number().messages({
-      "number.base": "Quantity must be a Number",
-      "any.required": "Quantity is required",
+      colorCode: joi.string().messages({
+        "string.base": "Color Code must be a string",
+        "string.empty": "Color Code must not be empty.",
+      }),
+    }),
+    stock: joi.number().messages({
+      "number.base": "Stock must be a Number",
+      "any.required": "Stock is required",
     }),
     imgUrl: joi.string().messages({
       "string.base": "Image url must be a string",
@@ -166,6 +168,10 @@ export const updateProductValidator = (req, res, next) => {
         "string.base": "categoryId must be a BSON object Id.",
         "any.required": "categoryId is required",
         "string.empty": "categoryId is required",
+      }),
+      stock: joi.number().messages({
+        "number.base": "Stock must be a Number",
+        "any.required": "Stock is required",
       }),
       variations: joi
         .when("color", {

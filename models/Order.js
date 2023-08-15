@@ -2,12 +2,22 @@ import mongoose, { Schema } from "mongoose";
 
 const orderSchema = new Schema(
   {
-    userId: { type: String, required: true },
+    customerId: { type: Schema.Types.ObjectId, required: true,ref:"users" },
     products: [
       {
-        prodcutId: {
+        productId: {
           type: Schema.Types.ObjectId,
           ref: "products",
+          required:true
+        },
+        variationId: {
+          type:  Schema.Types.ObjectId,
+          ref: "products.variations",
+          required:true
+        },
+        subVariationId: {
+          type:  Schema.Types.ObjectId,
+          ref: "products.variations.subVariations",
           required:true
         },
         quantity: {
@@ -30,4 +40,4 @@ const orderSchema = new Schema(
   { timestamps: true }
 );
 
-export const order = mongoose.model("Order", orderSchema);
+export const orders = mongoose.model("Order", orderSchema);

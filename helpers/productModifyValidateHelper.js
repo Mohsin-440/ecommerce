@@ -18,7 +18,7 @@ export const productVariationsValidator = (req, res) => {
   }
   if (checkVariations(req, res, "price")) error = true;
   else if (checkVariations(req, res, "color")) error = true;
-  else if (checkVariations(req, res, "quantity")) error = true;
+  else if (checkVariations(req, res, "stock")) error = true;
   return error;
 };
 function checkVariations(req, res, key) {

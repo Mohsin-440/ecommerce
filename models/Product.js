@@ -13,7 +13,7 @@ const variation = new Schema({
           type: String, required: true,
         },
       },
-      quantity: { type: Number, required: true },
+      stock: { type: Number, required: true },
       imgUrl: [{ type: String, required: true }]
     },
   ],
@@ -34,7 +34,7 @@ const ProductSchema = new Schema(
       ref: "categories",
       required: true,
     },
-    quantity: { type: Number },
+    stock: { type: Number },
   },
   { timestamps: true }
 );

@@ -53,6 +53,7 @@ export const addToCart = async (req, res) => {
     //     },
     //   },
     // ]);
+    
     // const getcart = await carts.aggregate;
     // [
     //   {
@@ -96,25 +97,6 @@ export const addToCart = async (req, res) => {
 export const updateCart = async (req, res) => {
   try {
     const { products } = req.body;
-
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].prodcutId) {
-        const getProduct = await products.findOne({
-          _id: products[i].prodcutId,
-          quantity: { $lt: products[i].quantity },
-        });
-
-        if (getProduct) {
-          res.status(404).json({
-            error: {
-              qunatity: "Product is out of stock.",
-              prodcutId: products[i].prodcutId,
-            },
-          });
-          break;
-        }
-      }
-    }
 
     const createCart = carts.create(req.body);
     return res.status(201).json(createCart);
