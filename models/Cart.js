@@ -33,30 +33,3 @@ const CartSchema = new Schema(
 );
 
 export const carts = mongoose.model("Cart", CartSchema);
-
-const a = [
-  {
-    "$lookup": {
-      "from": "products",
-      "as": "cartProducts",
-      "let": {
-        "cartProductId": "prodcutId"
-      },
-      "pipeline": [
-        {
-          $unwind: "$variations"
-        },
-        {
-          $unwind: "$variations.subVariations"
-        },
-        {
-          $match: {
-            $exec: {
-              _id: "$$cartProductId"
-            }
-          }
-        }
-      ]
-    }
-  }
-]
