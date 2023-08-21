@@ -63,7 +63,7 @@ export const getAllCategoriesWithSubCategory = async (req, res) => {
   }
 };
 
-
+ 
 export const getCategoryImage = async (req, res) => {
 
   try {
@@ -121,3 +121,4 @@ export const getCategoryImage = async (req, res) => {
     // console.log(`error occurred while getting voice message`, error)
   }
 }
+

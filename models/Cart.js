@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 const CartSchema = new Schema(
   {
-    userId: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId,ref:"users", required: true },
     products: [
       {
         productId: {
@@ -12,14 +12,14 @@ const CartSchema = new Schema(
           required: true
         },
         variationId: {
-          type: String,
-          ref: "products.variations",
-          required: true
+          type: Schema.Types.ObjectId,
+          ref: "products",
+          required:true
         },
         subVariationId: {
-          type: String,
-          ref: "products.variations.subVariations",
-          required: true
+          type: Schema.Types.ObjectId,
+          ref: "products",
+          required:true
         },
         quantity: {
           type: Number,
