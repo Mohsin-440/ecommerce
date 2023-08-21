@@ -1,7 +1,9 @@
-import { validatationTemplate } from "../../../helpers/validateHelper.js";
+import { imageValidation } from "../../../helpers/joiCustomValidations.js";
+import { validatationTemplate, } from "../../../helpers/validateHelper.js";
 import joi from "joi";
 
 export const addCategoryValidator = (req, res, next) => {
+
   const schema = joi
     .object()
     .keys({
@@ -15,6 +17,7 @@ export const addCategoryValidator = (req, res, next) => {
 
   validatationTemplate(req, res, next, schema);
 };
+
 export const updateCategoryValidator = (req, res, next) => {
   const schema = joi
     .object()
@@ -27,6 +30,17 @@ export const updateCategoryValidator = (req, res, next) => {
 
   validatationTemplate(req, res, next, schema);
 };
+
+
+
+
+
+
+
+
+
+
+
 export const addSubCategoryValidator = (req, res, next) => {
   const schema = joi
     .object()
@@ -40,13 +54,17 @@ export const addSubCategoryValidator = (req, res, next) => {
         "any.required": "Sub Category Name is required",
         "string.empty": "Sub Category Name is required",
         "string.base": "Sub Category Name must be a string",
-      })
+      }),
+      ...imageValidation
     }
     )
     .unknown(false);
 
   validatationTemplate(req, res, next, schema);
 };
+
+
+
 export const updateSubCategoryValidator = (req, res, next) => {
   const schema = joi
     .object()
@@ -56,9 +74,9 @@ export const updateSubCategoryValidator = (req, res, next) => {
       }),
       subCategoryName: joi.string().messages({
         "string.base": "Sub Category Name must be a string",
-      })
-    }
-    )
+      }),
+      ...imageValidation
+    })
     .unknown(false);
 
   validatationTemplate(req, res, next, schema);

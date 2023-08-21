@@ -1,5 +1,6 @@
 import { carts } from "../../models/Cart.js";
-import { products } from "../../models/Product.js";
+import { products } from "../../models/ProductsSchemae/products.js";
+
 
 export const getFullCart = async (req, res) => {
   try {

@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+
+
 const CartSchema = new Schema(
   {
     userId: { type: String, required: true },
@@ -7,22 +9,22 @@ const CartSchema = new Schema(
         productId: {
           type: Schema.Types.ObjectId,
           ref: "products",
-          required:true
+          required: true
         },
         variationId: {
           type: String,
-          ref: "products",
-          required:true
+          ref: "products.variations",
+          required: true
         },
         subVariationId: {
           type: String,
-          ref: "products",
-          required:true
+          ref: "products.variations.subVariations",
+          required: true
         },
         quantity: {
           type: Number,
           default: 1,
-          required:true
+          required: true
         },
       },
     ],
@@ -31,3 +33,30 @@ const CartSchema = new Schema(
 );
 
 export const carts = mongoose.model("Cart", CartSchema);
+
+const a = [
+  {
+    "$lookup": {
+      "from": "products",
+      "as": "cartProducts",
+      "let": {
+        "cartProductId": "prodcutId"
+      },
+      "pipeline": [
+        {
+          $unwind: "$variations"
+        },
+        {
+          $unwind: "$variations.subVariations"
+        },
+        {
+          $match: {
+            $exec: {
+              _id: "$$cartProductId"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

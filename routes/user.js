@@ -15,9 +15,10 @@ const userRouter = express.Router();
 userRouter.post("/register", signUpValidator, registerController);
 userRouter.post("/login", loginValidator,  loginController);
 
-
 userRouter.put("/update/:id",updateUsersValidator, updateUser);
+
 userRouter.delete("/:id", deleteUser);
+
 userRouter.get("/:id", getOneUser);
 userRouter.get("/", getAllUsers);
 

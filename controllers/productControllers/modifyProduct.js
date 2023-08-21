@@ -1,5 +1,8 @@
-import { products } from "../../models/Product.js";
 
+import { products } from "../../models/ProductsSchemae/products.js";
+import { productSubVariations } from "../../models/ProductsSchemae/subVariations.js";
+import { productVariations } from "../../models/ProductsSchemae/variations.js";
+ 
 export const createProduct = async (req, res) => {
   try {
     const checkName = await products.findOne({
@@ -8,14 +11,32 @@ export const createProduct = async (req, res) => {
     if (checkName)
       return res.status(403).json({ error: { title: "Title already taken." } });
 
-    const createdProduct = await products.create(req.body);
+    const { variations } = req.body;
 
+
+    delete req.body.variations;
+    const createdProduct = await products.create(req.body);
+    if (createdProduct._id) {
+      for (let i = 0; i < variations.length; i++) {
+        const { subVariations } = variations[i]
+        delete req.body.variations;
+
+        const variatonCreated = await productVariations.create(variations[i]);
+        if (subVariations?.length > 0) {
+          for (let j = 0; j < subVariations?.length; j++) {
+
+            productSubVariations.create({ variationId: variatonCreated._id, ...subVariations[j] })
+          }
+        }
+      }
+    }
     res.status(201).json(createdProduct);
   } catch (error) {
     console.log(`error occurred while careating Product: ${error}`);
     res.status(500).json(error);
   }
 };
+
 export const updateProduct = async (req, res) => {
   try {
     const findProduct = await products.findOne({
@@ -58,3 +79,4 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json(error);
   }
 };
+

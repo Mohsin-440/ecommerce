@@ -5,6 +5,7 @@ import { hashPassword } from "../../helpers/hashPassword.js";
 
 const registerController = async (req, res) => {
   try {
+    
     const _id = new Types.ObjectId();
     const username =
       req.body.firstName + req.body.lastName + _id.toString().substring(0, 6);
@@ -16,7 +17,7 @@ const registerController = async (req, res) => {
       return res.status(403).json({ error: { email: "email already in use" } });
     const hasedPassword = hashPassword(req.body.password);
 
-    req.body.role = "customer";
+    req.body.role = "admin";
     const newUser = new users({
       ...req.body,
       _id,

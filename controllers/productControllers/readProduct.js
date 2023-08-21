@@ -1,5 +1,5 @@
-import { Types } from "mongoose";
-import { products } from "../../models/Product.js";
+import { products } from "../../models/ProductsSchemae/products.js";
+
 
 const getOneProduct = async (req, res) => {
   try {

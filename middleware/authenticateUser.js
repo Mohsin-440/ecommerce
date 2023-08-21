@@ -14,10 +14,7 @@ export const authenticateUser = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         if (!decoded)
             return res.status(401).json({ message: "Pleases login again" });
-
-
-
-
+        
 
         const getUser = await users.findOne({
             _id: new Types.ObjectId(decoded)
